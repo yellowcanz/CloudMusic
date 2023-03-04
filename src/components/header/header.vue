@@ -9,7 +9,7 @@
         <li class="mx-3 sm:mx-6 text-gray-400 hover:text-gray-50">探索</li>
         <li class="mx-3 sm:mx-6 text-gray-400 hover:text-gray-50">媒体库</li>
         <li v-show="state" @click="search(true)" class="px-6 text-gray-400 hover:text-gray-50">搜索</li>
-        <li v-show="!state" ref="searchbar" class="absolute top-1/2 -translate-y-1/2 w-1/2 flex items-center border-zinc-800 border">
+        <li v-show="!state" ref="searchbar" class="absolute top-1/2 -translate-y-1/2 w-1/2 flex items-center border-zinc-800 border text-sm sm:text-xl">
           <span class="text-gray-400 p-3 bg-zinc-900" @click="search(false)">返回</span>
           <input class="p-3 flex-1 outline-none bg-zinc-900 text-gray-400" type="text" placeholder="搜索尚未开发">
         </li>
