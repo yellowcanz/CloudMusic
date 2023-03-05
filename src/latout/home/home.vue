@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- 头部 -->
-    <Header></Header>
     <!-- 为你推荐 -->
     <Recommend></Recommend>
     <!-- 今天最火 -->
@@ -27,7 +25,6 @@
 
 <script setup lang="ts">
 import {ref} from "vue"
-import Header from '../../components/header/header.vue'
 import Recommend from '../../components/homelist/recommend.vue'
 import ToDayHot from '../../components/homelist/todayhot.vue'
 import ExclusiveSinger from '../../components/homelist/exclusiveSinger.vue'
