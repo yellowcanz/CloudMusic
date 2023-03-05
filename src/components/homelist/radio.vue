@@ -1,5 +1,5 @@
 <template>
-    <div class="text-white text-5xl font-semibold w-10/12 px-3 m-auto">为你推荐</div>
+    <div class="text-white text-5xl font-semibold w-10/12 px-3 m-auto">热门电台</div>
     <el-skeleton :loading="loading" animated :throttle="500" :count=16 class="flex flex-wrap justify-between m-auto py-8 w-10/12">
         <template #template>
             <div class="flex w-full sm:w-1/2  xl:w-1/4 px-2 mb-4">
