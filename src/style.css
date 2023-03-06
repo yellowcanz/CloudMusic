@@ -69,7 +69,19 @@
             width:100%;
         }
         
-        
+        .songbar .el-slider__runway{
+            height:3px;
+            background-color:#383838;
+        }
+
+        .songbar .el-slider__bar{
+            height:3px;
+        }
+        .songbar .el-slider__button-wrapper{
+            top:50%;
+            transform:translate(-50%,-50%);
+        }
+
         .scrollbar::-webkit-scrollbar {
             width: 0.07rem;
         }

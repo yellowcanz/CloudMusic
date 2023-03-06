@@ -65,7 +65,7 @@
             <img :class="[rotate ? 'up' : 'down']" src="../../assets/up.png">
         </div>
         <!-- 歌曲进度 -->
-        <div class="absolute w-full top-0 left-0">
+        <div class="absolute w-full top-0 left-0 songbar pr-6">
             <el-slider v-model="value2"  class="h-auto"/>
         </div>
     </div>
