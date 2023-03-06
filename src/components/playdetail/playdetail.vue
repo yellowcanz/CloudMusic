@@ -32,7 +32,7 @@
             </el-tabs>
         </div>
     </div>
-
+    <!-- 底部条 -->
     <div v-show="hassong"
         class="text-white absolute bottom-0  bg-zinc-900 p-4 lg:p-5 flex justify-between items-center w-full px-3 main">
         <div class="flex">
@@ -64,6 +64,10 @@
         <div class="w-6 h-6" @click="showDetail">
             <img :class="[rotate ? 'up' : 'down']" src="../../assets/up.png">
         </div>
+        <!-- 歌曲进度 -->
+        <div class="absolute w-full top-0 left-0">
+            <el-slider v-model="value2"  class="h-auto"/>
+        </div>
     </div>
 </template>
 
@@ -71,7 +75,7 @@
 import { computed, ref } from "vue"
 let count = ref(20)
 let loading = ref(false)
-
+const value2 = ref(0)
 const activeName = ref('first')
 const value = ref(0)
 const isplay = ref(true)
@@ -144,4 +148,5 @@ const load = () => {
         transform: scale(1);
     }
 }
+
 </style>
