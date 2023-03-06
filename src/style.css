@@ -36,6 +36,7 @@
             width: 33.33%;
             text-align: center;
             padding: 0 1rem;
+            font-size:1.2rem;
         }
         
         .tab .el-tabs__item.is-active {
@@ -59,14 +60,10 @@
         }
         
         .tab .el-tabs__content {
-            overflow-y: auto;
-        }
-        
-        
-        .tab .el-tabs__content {
-            height: calc(100% - 60px);
-            padding-bottom:60px;
+            height: calc(100% - 64px);
             width:100%;
+            overflow:visible;
+            overflow-y: auto;
         }
         
         .songbar .el-slider__runway{
@@ -82,24 +79,29 @@
             transform:translate(-50%,-50%);
         }
 
-        .scrollbar::-webkit-scrollbar {
+        /* 滚动条 */
+        .scrollbar::-webkit-scrollbar,
+        .tab .el-tabs__content::-webkit-scrollbar  {
             width: 0.07rem;
         }
         
         /* 滚动槽 */
-        .scrollbar::-webkit-scrollbar-track {
+        .scrollbar::-webkit-scrollbar-track,
+        .tab .el-tabs__content::-webkit-scrollbar-track {
             background-color: transparent;
             border-radius: 0.04rem;
             opacity: 0.8;
         }
         
         /* 滚动条滑块 */
-        .scrollbar::-webkit-scrollbar-thumb {
+        .scrollbar::-webkit-scrollbar-thumb,
+        .tab .el-tabs__content::-webkit-scrollbar-thumb {
             background-color: #717171;
             border-radius: 0.04rem;
         }
         
-        .scrollbar::-webkit-scrollbar-thumb:window-inactive {
+        .scrollbar::-webkit-scrollbar-thumb:window-inactive,
+        .tab .el-tabs__content::-webkit-scrollbar-thumb:window-inactive {
             border-radius: 0.04rem;
             background-color: #717171;
         }

@@ -10,7 +10,6 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
     ElSkeletonItem: typeof import('element-plus/es')['ElSkeletonItem']
@@ -19,9 +18,7 @@ declare module '@vue/runtime-core' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ExclusiveSinger: typeof import('./src/components/homelist/exclusiveSinger.vue')['default']
     Header: typeof import('./src/components/header/header.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Mv: typeof import('./src/components/homelist/mv.vue')['default']
-    Playbar: typeof import('./src/components/playbar/playbar.vue')['default']
     Playdetail: typeof import('./src/components/playdetail/playdetail.vue')['default']
     Radio: typeof import('./src/components/homelist/radio.vue')['default']
     Recommend: typeof import('./src/components/homelist/recommend.vue')['default']

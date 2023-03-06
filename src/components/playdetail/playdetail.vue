@@ -1,11 +1,11 @@
 <template>
-    <div :class="[rotate ? 'show' : 'hide']" class="flex flex-col lg:flex-row justify-between items-center w-full h-full">
-        <div class="px-20 py-10 h-2/5 lg:h-full lg:py-20 lg:flex-1">
+    <div :class="[rotate ? 'show' : 'hide']" class="flex flex-col p-6 pb-0 lg:p-16 lg:flex-row justify-between items-center w-full" style="height: calc(100vh - 80px);">
+        <div class="h-2/5 lg:h-full lg:flex-1 lg:mr-7">
             <img src="../../assets/US_992_X_304.png" class="w-full h-full object-contain" :class="[rotate ? 'aniimg' : '']">
         </div>
-        <div class="text-white tab w-full h-3/5 flex-1 lg:h-full lg:w-2/5 lg:pt-20 lg:pr-20">
+        <div class="text-white tab w-full h-3/5 flex-1 lg:h-full lg:w-2/5">
             <el-tabs v-model="activeName" @tab-click="handleClick" class="h-full w-full">
-                <el-tab-pane label="接下来播放" name="first" class="overflow-y-auto">
+                <el-tab-pane label="接下来播放"  name="first">
                     <div class="flex overflow-x-auto py-3 mb-3 scrollbar">
                         <el-button type="info" v-for="(item, index) of 10">信息按钮</el-button>
                     </div>
@@ -34,14 +34,14 @@
     </div>
     <!-- 底部条 -->
     <div v-show="hassong"
-        class="text-white absolute bottom-0  bg-zinc-900 p-4 lg:p-5 flex justify-between items-center w-full px-3 main">
-        <div class="flex">
-            <img class="w-6 h-6 lg:w-12 lg:h-12" src="../../assets/48shangyishou.png" alt="上一首">
-            <img v-show="isplay" @click="play(true)" class="w-6 h-6  lg:w-12 lg:h-12  lg:mx-12 scale-150 mx-6"
+        class="text-white absolute bottom-0  bg-zinc-900  flex justify-between items-center w-full px-3 main h-16">
+        <div class="flex items-center">
+            <img class="w-4 h-4 lg:w-8 lg:h-8" src="../../assets/48shangyishou.png" alt="上一首">
+            <img v-show="isplay" @click="play(true)" class="w-4 h-4  lg:w-8 lg:h-8  lg:mx-12 scale-150 mx-6"
                 src="../../assets/46bofang.png" alt="播放">
-            <img v-show="!isplay" @click="play(false)" class="w-6 h-6 lg:w-12 lg:h-12 lg:mx-12  scale-150 mx-6"
+            <img v-show="!isplay" @click="play(false)" class="w-4 h-4 lg:w-8 lg:h-8 lg:mx-12  scale-150 mx-6"
                 src="../../assets/47zanting.png" alt="暂停">
-            <img class="w-6 h-6 lg:w-12 lg:h-12" src="../../assets/49xiayishou.png" alt="下一首">
+            <img class="w-4 h-4 lg:w-8 lg:h-8" src="../../assets/49xiayishou.png" alt="下一首">
         </div>
         <div class="mx-6 hidden lg:block">
             <span>00:00</span>
@@ -64,9 +64,9 @@
         <div class="w-6 h-6" @click="showDetail">
             <img :class="[rotate ? 'up' : 'down']" src="../../assets/up.png">
         </div>
-        <!-- 歌曲进度 -->
-        <div class="absolute w-full top-0 left-0 songbar pr-6">
-            <el-slider v-model="value2"  class="h-auto"/>
+
+        <div class="absolute w-full top-0 left-0 songbar px-6">
+            <el-slider v-model="value2" style="height: auto;"/>
         </div>
     </div>
 </template>
