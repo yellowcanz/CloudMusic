@@ -37,10 +37,12 @@ const loading = ref(true)
 // const loading =  reactive({
 //     loading : true
 // })
-onMounted(()=>{
-   let res = newDiscOnTheShelf()
-   list.value = res
-})
+// onMounted(()=>{
+   let res = newDiscOnTheShelf({ limit : 16, offset :0, area : 'all', type: 'hot', year : '2023', month : ''})
+   console.log(res);
+//    list.value = res
+//    console.log(list.value)
+// })
 </script>
 
 <style scoped lang="less">
