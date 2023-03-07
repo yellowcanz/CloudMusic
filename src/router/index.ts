@@ -7,10 +7,10 @@ import playdetail from '../components/playdetail/playdetail.vue'
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
-        // {
-            // component: Home,
-            // path: '/'
-        // },
+        {
+            component: Home,
+            path: '/home'
+        },
         {
             component: Explore,
             path: '/explore'
@@ -18,8 +18,8 @@ const router = createRouter({
         },
         {
             component: playdetail,
-            // path: '/playdetail',
-            path: '/'
+            path: '/playdetail',
+            // path: '/'
         },
 
     ]

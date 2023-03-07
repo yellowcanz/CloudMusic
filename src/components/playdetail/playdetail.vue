@@ -1,5 +1,5 @@
 <template>
-    <div :class="[rotate ? 'show' : 'hide']" class="flex flex-col p-6 pb-0 lg:p-16 lg:flex-row justify-between items-center w-full" style="height: calc(100vh - 80px);">
+    <div :class="[rotate ? 'show' : 'hide']" class="flex flex-col p-6 pb-0 lg:p-16 lg:flex-row justify-between items-center w-full" style="height: calc(100vh - 80px);padding-bottom: 64px;">
         <div class="h-2/5 lg:h-full lg:flex-1 lg:mr-7">
             <img src="../../assets/US_992_X_304.png" class="w-full h-full object-contain" :class="[rotate ? 'aniimg' : '']">
         </div>
@@ -34,7 +34,7 @@
     </div>
     <!-- 底部条 -->
     <div v-show="hassong"
-        class="text-white absolute bottom-0  bg-zinc-900  flex justify-between items-center w-full px-3 main h-16">
+        class="text-white absolute bottom-0  bg-zinc-900  flex justify-between items-center w-full px-3 main" style="height: 64px;">
         <div class="flex items-center">
             <img class="w-4 h-4 lg:w-8 lg:h-8" src="../../assets/48shangyishou.png" alt="上一首">
             <img v-show="isplay" @click="play(true)" class="w-4 h-4  lg:w-8 lg:h-8  lg:mx-12 scale-150 mx-6"

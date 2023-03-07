@@ -29,11 +29,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue"
+import { ref, reactive,onMounted } from "vue"
+import {newDiscOnTheShelf} from '../../api/api'
+
+const list = ref({})
 const loading = ref(true)
 // const loading =  reactive({
 //     loading : true
 // })
+onMounted(()=>{
+   let res = newDiscOnTheShelf()
+   list.value = res
+})
 </script>
 
 <style scoped lang="less">
