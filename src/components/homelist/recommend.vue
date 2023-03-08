@@ -1,6 +1,7 @@
 <template>
     <div class="text-white text-5xl font-semibold w-10/12 px-3 m-auto">为你推荐</div>
-    <el-skeleton :loading="loading" animated :throttle="500" :count=16 class="flex flex-wrap justify-between m-auto py-8 w-10/12">
+    <el-skeleton :loading="loading" animated :throttle="500" :count=16
+        class="flex flex-wrap justify-between m-auto py-8 w-10/12">
         <template #template>
             <div class="flex w-full sm:w-1/2  xl:w-1/4 px-2 mb-4">
                 <el-skeleton-item variant="image" class="w-16 h-16" />
@@ -12,37 +13,40 @@
         </template>
         <template #default>
             <div class="flex flex-wrap justify-between w-10/12 px-3 m-auto py-8">
-                <div class="flex w-full sm:w-1/2  xl:w-1/4 px-2 mb-4" v-for="(item, index) of 16">
+                <!-- <router-link :to="{path:'/playdetail'}"> -->
+                <router-link :to="{path:'/album',query:{id:item.id} }" class="flex w-full sm:w-1/2  xl:w-1/4 px-2 mb-4" v-for="(item, index) of rcelist" :key="item.id">
                     <div class="w-16 h-16">
                         <el-image
-                            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+                            :src="item.picUrl"
                             class="w-full h-full"></el-image>
                     </div>
                     <div class="flex item-center justify-around flex-col ml-2 text-white">
-                        <div class="p-2">When We Were Young</div>
-                        <div class="px-2 text-gray-400">阿黛尔</div>
+                        <div class="p-2 hover:text-red-800">{{item.name}}</div>
+                        <div class="px-2 text-gray-400">{{item.artist.name}}</div>
                     </div>
-                </div>
+                </router-link>
+            <!-- </router-link> -->
             </div>
         </template>
     </el-skeleton>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive,onMounted } from "vue"
-import {newDiscOnTheShelf} from '../../api/api'
+import { ref, reactive, onMounted } from "vue"
+import { newDiscOnTheShelf } from '../../api/api'
+import { Recommend } from '../../interface/interface'
 
-const list = ref({})
 const loading = ref(true)
-// const loading =  reactive({
-//     loading : true
-// })
-// onMounted(()=>{
-   let res = newDiscOnTheShelf({ limit : 16, offset :0, area : 'all', type: 'hot', year : '2023', month : ''})
-   console.log(res);
-//    list.value = res
-//    console.log(list.value)
-// })
+
+let rcelist = reactive<Recommend[any]>([])
+
+onMounted(async ()=> {
+   const rec:any = await newDiscOnTheShelf()
+   if(rec.code !== 200) return
+   rcelist = rec.weekData.slice(0,16);
+   loading.value =false
+})
+   
 </script>
 
 <style scoped lang="less">

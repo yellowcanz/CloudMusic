@@ -18,7 +18,7 @@ axios.interceptors.response.use(response => {
 
 
 interface HTTP {
-    get<T>(url: string, params?: unknown): Promise<T>;
+    get<T>(url: string, params?: any): Promise<T>;
 }
 
 const http: HTTP = {
