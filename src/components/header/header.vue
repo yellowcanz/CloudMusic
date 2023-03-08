@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center w-full p-6 sticky top-0 bg-black border-b border-b-zinc-800" style="height: 80px;">
+  <div class="flex justify-between items-center w-full p-6 sticky top-0 z-50 bg-black border-b border-b-zinc-800" style="height: 80px;">
     <div class="flex">
       <img src="http://p3.music.126.net/tBTNafgjNnTL1KlZMt7lVA==/18885211718935735.jpg" class="w-8 mr-2 rounded-full">
       <span class="text-gray-50 text-2xl hidden sm:block">Music</span>

@@ -9,9 +9,15 @@ const singinglist = async (id:string = '') => {
     return await http.get(`/album`,{id}) 
 }
 
+// 新碟上架 获取专辑歌曲url
+const getsongurl = async (id:any,level:string) => { 
+    return await http.get(`/song/url/v1`,{id,level}) 
+}
+
 
 
 export {
     newDiscOnTheShelf,
-    singinglist
+    singinglist,
+    getsongurl
 }

@@ -72,7 +72,38 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref,onMounted } from "vue"
+import {LocationQueryValue, useRoute}  from 'vue-router'
+import {getsongurl} from '../../api/api'
+import {Songdata} from '../../interface/interface'
+import moment from 'moment';
+
+const route = useRoute()
+const songId:any  = route.query.id
+
+const songpic:any  = route.query.pic
+const songname:any  = route.query.sn
+const singerpic:any  = route.query.sgn
+const songtime:any  = route.query.time
+
+const songlist:any = []
+
+const songlistinfo:{} = {
+    songId,
+    songpic,
+    songname,
+    singerpic,
+    songtime
+}
+songlist.push(songlistinfo)
+
+console.log(songId);
+onMounted( async()=>{
+    const res = await getsongurl(songId,'hires')
+    // console.log(res);
+})
+
+
 let count = ref(20)
 let loading = ref(false)
 const value2 = ref(0)
