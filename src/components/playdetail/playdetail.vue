@@ -1,22 +1,24 @@
 <template>
-    <div :class="[rotate ? 'show' : 'hide']" class="flex flex-col p-6 pb-0 lg:p-16 lg:flex-row justify-between items-center w-full" style="height: calc(100vh - 80px);padding-bottom: 64px;">
+    <div :class="[rotate ? 'show' : 'hide']"
+        class="flex flex-col p-6 pb-0 lg:p-16 lg:flex-row justify-between items-center w-full"
+        style="height: calc(100vh - 80px);padding-bottom: 64px;">
         <div class="h-2/5 lg:h-full lg:flex-1 lg:mr-7">
             <img src="../../assets/US_992_X_304.png" class="w-full h-full object-contain" :class="[rotate ? 'aniimg' : '']">
         </div>
         <div class="text-white tab w-full h-3/5 flex-1 lg:h-full lg:w-2/5">
             <el-tabs v-model="activeName" @tab-click="handleClick" class="h-full w-full">
-                <el-tab-pane label="接下来播放"  name="first">
+                <el-tab-pane label="接下来播放" name="first">
                     <div class="flex overflow-x-auto py-3 mb-3 scrollbar">
                         <el-button type="info" v-for="(item, index) of 10">信息按钮</el-button>
                     </div>
                     <div>
                         <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-                            <li v-for="i in count"
+                            <li v-for="(item,index) in getSongList.songList" :key="item.id"
                                 class="flex justify-between items-center px-3 py-1 border-b border-b-zinc-800">
                                 <div class="flex">
                                     <div class="w-16 h-16 mr-4"><img class="w-full h-full" src="../../assets/vue.svg"></div>
                                     <div class="flex flex-col justify-around items-center">
-                                        <p>歌曲名字</p>
+                                        <p>{{item.name}}</p>
                                         <span class=" text-zinc-400">歌手名字</span>
                                     </div>
                                 </div>
@@ -34,7 +36,8 @@
     </div>
     <!-- 底部条 -->
     <div v-show="hassong"
-        class="text-white absolute bottom-0  bg-zinc-900  flex justify-between items-center w-full px-3 main" style="height: 64px;">
+        class="text-white absolute bottom-0  bg-zinc-900  flex justify-between items-center w-full px-3 main"
+        style="height: 64px;">
         <div class="flex items-center">
             <img class="w-4 h-4 lg:w-8 lg:h-8" src="../../assets/48shangyishou.png" alt="上一首">
             <img v-show="isplay" @click="play(true)" class="w-4 h-4  lg:w-8 lg:h-8  lg:mx-12 scale-150 mx-6"
@@ -66,41 +69,43 @@
         </div>
 
         <div class="absolute w-full top-0 left-0 songbar px-6">
-            <el-slider v-model="value2" style="height: auto;"/>
+            <el-slider v-model="value2" style="height: auto;" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref,onMounted } from "vue"
-import {LocationQueryValue, useRoute}  from 'vue-router'
-import {getsongurl} from '../../api/api'
-import {Songdata} from '../../interface/interface'
+import { computed, ref, onMounted } from "vue"
+import { LocationQueryValue, useRoute } from 'vue-router'
+import { getsongurl } from '../../api/api'
+import { Songdata } from '../../interface/interface'
 import moment from 'moment';
+import { usePlayListStore } from '../../store/songlist'
 
 const route = useRoute()
-const songId:any  = route.query.id
+const songId: any = route.query.id
 
-const songpic:any  = route.query.pic
-const songname:any  = route.query.sn
-const singerpic:any  = route.query.sgn
-const songtime:any  = route.query.time
+const songpic: any = route.query.pic
+const songname: any = route.query.sn
+const singerpic: any = route.query.sgn
+const songtime: any = route.query.time
 
-const songlist:any = []
+const getSongList = usePlayListStore()
 
-const songlistinfo:{} = {
-    songId,
-    songpic,
-    songname,
-    singerpic,
-    songtime
-}
-songlist.push(songlistinfo)
+const songlist: any = []
 
-console.log(songId);
-onMounted( async()=>{
-    const res = await getsongurl(songId,'hires')
-    // console.log(res);
+// const songlistinfo:{} = {
+//     songId,
+//     songpic,
+//     songname,
+//     singerpic,
+//     songtime
+// }
+// songlist.push(songlistinfo)
+onMounted(async () => {
+    const res = await getsongurl(songId, 'hires')
+    getSongList.songList.push(res)
+    console.log(getSongList.songList);
 })
 
 
@@ -179,5 +184,4 @@ const load = () => {
         transform: scale(1);
     }
 }
-
 </style>
