@@ -8,8 +8,8 @@ export interface Recommend{
 
 
 // 专辑详细
-export interface album{
-    songs:[],
+export interface Album{
+    songs:{},
     description:string
     singername:string,
     singerid:number

@@ -13,16 +13,16 @@
                     </div>
                     <div>
                         <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-                            <li v-for="(item,index) in getSongList.songList" :key="item.id"
+                            <li v-for="(item, index) in getSongList.songList" :key="item.id"
                                 class="flex justify-between items-center px-3 py-1 border-b border-b-zinc-800">
                                 <div class="flex">
-                                    <div class="w-16 h-16 mr-4"><img class="w-full h-full" src="../../assets/vue.svg"></div>
-                                    <div class="flex flex-col justify-around items-center">
-                                        <p>{{item.name}}</p>
-                                        <span class=" text-zinc-400">歌手名字</span>
+                                    <div class="w-16 h-16 mr-4"><img class="w-full h-full" :src="item.songAl.picUrl"></div>
+                                    <div class="flex flex-col justify-around">
+                                        <p>{{ item.songName }}</p>
+                                        <span class=" text-zinc-400">{{ item.songAr[0].name }}</span>
                                     </div>
                                 </div>
-                                <span>时间</span>
+                                <span>{{ moment(item.time).format('mm:ss') }}</span>
                             </li>
                         </ul>
                         <p v-if="loading" class="py-3 text-center">加载中...</p>
@@ -83,29 +83,32 @@ import moment from 'moment';
 import { usePlayListStore } from '../../store/songlist'
 
 const route = useRoute()
-const songId: any = route.query.id
-
-const songpic: any = route.query.pic
-const songname: any = route.query.sn
-const singerpic: any = route.query.sgn
-const songtime: any = route.query.time
-
 const getSongList = usePlayListStore()
 
-const songlist: any = []
+let getSongId: any = []
 
-// const songlistinfo:{} = {
-//     songId,
-//     songpic,
-//     songname,
-//     singerpic,
-//     songtime
-// }
-// songlist.push(songlistinfo)
+
+const handleId = () => {
+    let songId = ''
+    for(let k in getSongList.albumSongs){
+        getSongId.push(getSongList.albumSongs[k].songId)
+        songId = getSongId.join(',')
+    }
+    return songId
+}
+
+
+
 onMounted(async () => {
-    const res = await getsongurl(songId, 'hires')
-    getSongList.songList.push(res)
-    console.log(getSongList.songList);
+    const res: any = await getsongurl(handleId(), 'hires')
+    let data = res.data
+
+    getSongList.songList = data.map((item: any, index: any) => {
+        return { ...item, ...getSongList.albumSongs[index] }
+    })
+
+    getSongList.mergeArr(getSongList.songList)
+
 })
 
 
@@ -142,7 +145,6 @@ const load = () => {
         count.value += 2
         loading.value = false
     }, 2000)
-    console.log(count.value);
 }
 
 </script>
