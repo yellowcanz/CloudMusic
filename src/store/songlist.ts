@@ -6,11 +6,12 @@ export const usePlayListStore =  defineStore('playlist',{
     state:()=>{
         return {
             songList:[] as any,
+            albumSongs:[] as any,
             allSongID: '',
             songName:'',
             songPic:'',
             singerName:'',
-            albumSongs:[] as any
+            changeSong:{} as any
         }
     },
 
@@ -27,7 +28,18 @@ export const usePlayListStore =  defineStore('playlist',{
     actions:{
         mergeArr(data:any){
             this.songList = data
+        },
+
+        changeSongStore(data:number){
+            this.changeSong = data
+            console.log(this.changeSong);
         }
+
+        // getSongStoreInfo(index:number){
+        //  console.log(JSON.parse(window.localStorage.getItem('playlist')));
+        // },
+        
+        // getSongInfo
     },
 
     getters:{

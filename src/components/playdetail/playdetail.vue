@@ -2,8 +2,8 @@
     <div :class="[rotate ? 'show' : 'hide']"
         class="flex flex-col p-6 pb-0 lg:p-16 lg:flex-row justify-between items-center w-full"
         style="height: calc(100vh - 80px);padding-bottom: 64px;">
-        <div class="h-2/5 lg:h-full lg:flex-1 lg:mr-7">
-            <img src="../../assets/US_992_X_304.png" class="w-full h-full object-contain" :class="[rotate ? 'aniimg' : '']">
+        <div class="h-2/5 lg:h-full lg:flex-1 lg:mr-7 p-6">
+            <img :src="getSongList.changeSong.songpic" class="w-full h-full object-contain" :class="[rotate ? 'aniimg' : '']">
         </div>
         <div class="text-white tab w-full h-3/5 flex-1 lg:h-full lg:w-2/5">
             <el-tabs v-model="activeName" @tab-click="handleClick" class="h-full w-full">
@@ -13,7 +13,7 @@
                     </div>
                     <div>
                         <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-                            <li v-for="(item, index) in getSongList.songList" :key="item.id"
+                            <li v-for="(item, index) in getSongList.songList" :key="item.id" @click="getSongInfo(index)"
                                 class="flex justify-between items-center px-3 py-1 border-b border-b-zinc-800">
                                 <div class="flex">
                                     <div class="w-16 h-16 mr-4"><img class="w-full h-full" :src="item.songAl.picUrl"></div>
@@ -49,13 +49,13 @@
         <div class="mx-6 hidden lg:block">
             <span>00:00</span>
             <span class="mx-3">/</span>
-            <span>03:40</span>
+            <span>{{moment(getSongList.changeSong.songtotaltime).format('mm:ss')}}</span>
         </div>
         <div class="flex items-center justify-center flex-1 ml-3 pr-3">
-            <img src="../../assets/vue.svg" class="mr-3">
+            <img :src="getSongList.changeSong.songpic" class="mr-3 w-12 h-12">
             <div>
-                <p>歌曲名字</p>
-                <span class="text-zinc-400">歌手名字</span>
+                <p>{{ getSongList.changeSong.songname }}</p>
+                <span class="text-zinc-400">{{ getSongList.changeSong.singername }}</span>
             </div>
         </div>
         <div class="flex items-center w-1/5 mr-3">
@@ -71,32 +71,51 @@
         <div class="absolute w-full top-0 left-0 songbar px-6">
             <el-slider v-model="value2" style="height: auto;" />
         </div>
+        <audio :src="getSongList.changeSong.songurl"></audio>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue"
-import { LocationQueryValue, useRoute } from 'vue-router'
+import { computed, ref, onMounted, reactive } from "vue"
 import { getsongurl } from '../../api/api'
-import { Songdata } from '../../interface/interface'
 import moment from 'moment';
 import { usePlayListStore } from '../../store/songlist'
 
-const route = useRoute()
 const getSongList = usePlayListStore()
 
 let getSongId: any = []
-
-
 const handleId = () => {
     let songId = ''
-    for(let k in getSongList.albumSongs){
+    for (let k in getSongList.albumSongs) {
         getSongId.push(getSongList.albumSongs[k].songId)
         songId = getSongId.join(',')
     }
     return songId
 }
 
+let curSonginfo:any = []
+const songInfo: any = reactive({
+    songurl: null,
+    songpic: null,
+    songtotaltime: null,
+    singername: '',
+    songname: '',
+    curtime: ''
+})
+const getSongInfo = (index: any) => {
+    // let ls:any =  localStorage.getItem('playlist')
+    // let tsls:any = JSON.parse(ls)
+    // console.log(getSongList.songList);
+    songInfo.songurl = getSongList.songList[index].url
+    songInfo.songpic = getSongList.songList[index].songAl.picUrl
+    songInfo.songtotaltime = getSongList.songList[index].songTime
+    songInfo.singername = getSongList.songList[index].songAr[0].name
+    songInfo.songname = getSongList.songList[index].songName
+    // curSonginfo.push(songInfo)
+    // console.log(curSonginfo);
+    // console.log(songInfo);
+    getSongList.changeSongStore(songInfo)
+}
 
 
 onMounted(async () => {
