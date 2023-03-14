@@ -50,8 +50,8 @@ const toDetail = (index: number) => {
         if (setSongList.albumSongs[k].songId === newSongs[index].songId) return
     }
     setSongList.albumSongs.push(newSongs[index])
-
 }
+
 
 const addplaylist = () => {
     setSongList.albumSongs = newSongs

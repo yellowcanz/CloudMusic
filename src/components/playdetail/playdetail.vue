@@ -13,7 +13,7 @@
                     </div>
                     <div>
                         <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-                            <li v-for="(item, index) in getSongList.songList" :key="item.id" @click="getSongInfo(index)"
+                            <li v-for="(item, index) in getSongList.songList" :key="item.id" @click="clickGetSongInfo(index)"
                                 class="flex justify-between items-center px-3 py-1 border-b border-b-zinc-800">
                                 <div class="flex">
                                     <div class="w-16 h-16 mr-4"><img class="w-full h-full" :src="item.songAl.picUrl"></div>
@@ -93,7 +93,18 @@ const handleId = () => {
     return songId
 }
 
-let curSonginfo:any = []
+const getSongIndex = () =>{
+    let index = "0"
+    for(let k in getSongList.albumSongs){
+        for(let j in getSongList.songList){
+            if(getSongList.albumSongs[k].songId === getSongList.songList[j].id )
+            console.log(getSongList.albumSongs[k].songId,getSongList.songList[j].id);
+             index = j
+        }
+    }
+    return index
+}
+
 const songInfo: any = reactive({
     songurl: null,
     songpic: null,
@@ -102,21 +113,20 @@ const songInfo: any = reactive({
     songname: '',
     curtime: ''
 })
-const getSongInfo = (index: any) => {
-    // let ls:any =  localStorage.getItem('playlist')
-    // let tsls:any = JSON.parse(ls)
-    // console.log(getSongList.songList);
+
+const getSongInfo = (index:string) => {
     songInfo.songurl = getSongList.songList[index].url
     songInfo.songpic = getSongList.songList[index].songAl.picUrl
     songInfo.songtotaltime = getSongList.songList[index].songTime
     songInfo.singername = getSongList.songList[index].songAr[0].name
     songInfo.songname = getSongList.songList[index].songName
-    // curSonginfo.push(songInfo)
-    // console.log(curSonginfo);
-    // console.log(songInfo);
     getSongList.changeSongStore(songInfo)
 }
 
+
+const clickGetSongInfo = (index: any) => {
+    getSongInfo(index)
+}
 
 onMounted(async () => {
     const res: any = await getsongurl(handleId(), 'hires')
@@ -127,7 +137,7 @@ onMounted(async () => {
     })
 
     getSongList.mergeArr(getSongList.songList)
-
+    getSongInfo(getSongIndex())
 })
 
 
