@@ -3,7 +3,8 @@
         class="flex flex-col p-6 pb-0 lg:p-16 lg:flex-row justify-between items-center w-full"
         style="height: calc(100vh - 80px);padding-bottom: 64px;">
         <div class="h-2/5 lg:h-full lg:flex-1 lg:mr-7 p-6">
-            <img :src="getSongList.changeSong.songpic" class="w-full h-full object-contain" :class="[rotate ? 'aniimg' : '']">
+            <img :src="getSongList.changeSong.songpic" class="w-full h-full object-contain"
+                :class="[rotate ? 'aniimg' : '']">
         </div>
         <div class="text-white tab w-full h-3/5 flex-1 lg:h-full lg:w-2/5">
             <el-tabs v-model="activeName" @tab-click="handleClick" class="h-full w-full">
@@ -13,7 +14,8 @@
                     </div>
                     <div>
                         <ul v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
-                            <li v-for="(item, index) in getSongList.songList" :key="item.id" @click="clickGetSongInfo(index)"
+                            <li v-for="(item, index) in getSongList.songList" :key="item.id"
+                                @click="clickGetSongInfo(index)"
                                 class="flex justify-between items-center px-3 py-1 border-b border-b-zinc-800">
                                 <div class="flex">
                                     <div class="w-16 h-16 mr-4"><img class="w-full h-full" :src="item.songAl.picUrl"></div>
@@ -40,16 +42,16 @@
         style="height: 64px;">
         <div class="flex items-center">
             <img class="w-4 h-4 lg:w-8 lg:h-8" src="../../assets/48shangyishou.png" alt="上一首">
-            <img v-show="isplay" @click="play(true)" class="w-4 h-4  lg:w-8 lg:h-8  lg:mx-12 scale-150 mx-6"
-                src="../../assets/46bofang.png" alt="播放">
-            <img v-show="!isplay" @click="play(false)" class="w-4 h-4 lg:w-8 lg:h-8 lg:mx-12  scale-150 mx-6"
-                src="../../assets/47zanting.png" alt="暂停">
+            <img v-show="isplay" @click="audiohandle(true)" class="w-4 h-4 lg:w-8 lg:h-8 lg:mx-12  scale-150 mx-6"
+                src="../../assets/47zanting.png" alt="播放">
+            <img v-show="!isplay" @click="audiohandle(false)" class="w-4 h-4  lg:w-8 lg:h-8  lg:mx-12 scale-150 mx-6"
+                src="../../assets/46bofang.png" alt="暂停">
             <img class="w-4 h-4 lg:w-8 lg:h-8" src="../../assets/49xiayishou.png" alt="下一首">
         </div>
         <div class="mx-6 hidden lg:block">
             <span>00:00</span>
             <span class="mx-3">/</span>
-            <span>{{moment(getSongList.changeSong.songtotaltime).format('mm:ss')}}</span>
+            <span>{{ moment(getSongList.changeSong.songtotaltime).format('mm:ss') }}</span>
         </div>
         <div class="flex items-center justify-center flex-1 ml-3 pr-3">
             <img :src="getSongList.changeSong.songpic" class="mr-3 w-12 h-12">
@@ -71,19 +73,31 @@
         <div class="absolute w-full top-0 left-0 songbar px-6">
             <el-slider v-model="value2" style="height: auto;" />
         </div>
-        <audio :src="getSongList.changeSong.songurl"></audio>
+        <audio ref="audio" @play="onplay" @pause="onpause" @timeupdate="getCurr" @canplay="getTotal"
+            :src="getSongList.changeSong.songurl"></audio>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, reactive } from "vue"
+import { computed, ref, onMounted, reactive, nextTick } from "vue"
 import { getsongurl } from '../../api/api'
 import moment from 'moment';
 import { usePlayListStore } from '../../store/songlist'
+import { is } from "@babel/types";
 
 const getSongList = usePlayListStore()
-
 let getSongId: any = []
+let audio = ref()
+let count = ref(20)
+let loading = ref(false)
+const value2 = ref(0)
+const activeName = ref('first')
+const value = ref(0)
+let isplay: any = ref(false) //播放状态
+const rotate = ref(true)
+const hassong = ref(true)
+
+
 const handleId = () => {
     let songId = ''
     for (let k in getSongList.albumSongs) {
@@ -91,18 +105,6 @@ const handleId = () => {
         songId = getSongId.join(',')
     }
     return songId
-}
-
-const getSongIndex = () =>{
-    let index = "0"
-    for(let k in getSongList.albumSongs){
-        for(let j in getSongList.songList){
-            if(getSongList.albumSongs[k].songId === getSongList.songList[j].id )
-            console.log(getSongList.albumSongs[k].songId,getSongList.songList[j].id);
-             index = j
-        }
-    }
-    return index
 }
 
 const songInfo: any = reactive({
@@ -114,8 +116,8 @@ const songInfo: any = reactive({
     curtime: ''
 })
 
-const getSongInfo = (index:string) => {
-    songInfo.songurl = getSongList.songList[index].url
+const getSongInfo = (index: string) => {
+    songInfo.songurl = `https://music.163.com/song/media/outer/url?id=${getSongList.songList[index].id}.mp3`
     songInfo.songpic = getSongList.songList[index].songAl.picUrl
     songInfo.songtotaltime = getSongList.songList[index].songTime
     songInfo.singername = getSongList.songList[index].songAr[0].name
@@ -123,32 +125,32 @@ const getSongInfo = (index:string) => {
     getSongList.changeSongStore(songInfo)
 }
 
-
 const clickGetSongInfo = (index: any) => {
     getSongInfo(index)
+    nextTick(() => {
+        onplay()
+    })
 }
 
-onMounted(async () => {
-    const res: any = await getsongurl(handleId(), 'hires')
-    let data = res.data
+// 播放
+const onplay = () => {
+    if (audio.value.src == '') {
+        audio.value.src = getSongList.changeSong.songurl
+    }
+    audio.value.play();
+    isplay.value = true
+}
+// 暂停
+const onpause = () => {
+    audio.value.pause();
+    isplay.value = false
+}
 
-    getSongList.songList = data.map((item: any, index: any) => {
-        return { ...item, ...getSongList.albumSongs[index] }
-    })
+// 当前时间
+const getCurr = () => { }
+// 总时间
+const getTotal = () => { }
 
-    getSongList.mergeArr(getSongList.songList)
-    getSongInfo(getSongIndex())
-})
-
-
-let count = ref(20)
-let loading = ref(false)
-const value2 = ref(0)
-const activeName = ref('first')
-const value = ref(0)
-const isplay = ref(true)
-const rotate = ref(true)
-const hassong = ref(true)
 
 const formatTooltip = (val: number) => {
     return val / 100
@@ -156,8 +158,10 @@ const formatTooltip = (val: number) => {
 const showDetail = () => {
     rotate.value = !rotate.value
 }
-const play = (type: boolean) => {
+
+const audiohandle = (type: any) => {
     isplay.value = !type
+    isplay.value ? onplay() : onpause()
 }
 
 const handleClick = (tab: any, event: any) => {
@@ -175,6 +179,21 @@ const load = () => {
         loading.value = false
     }, 2000)
 }
+
+
+onMounted(async () => {
+    const res: any = await getsongurl(handleId(), 'hires')
+    let data = res.data
+
+    getSongList.songList = data.map((item: any, index: any) => {
+        return { ...item, ...getSongList.albumSongs[index] }
+    })
+
+    getSongList.mergeArr(getSongList.songList)
+
+    getSongInfo(getSongList.curIndex)
+
+})
 
 </script>
 

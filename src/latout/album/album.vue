@@ -45,18 +45,20 @@ const singingListId: any = useRoute().query.id
 const setSongList = usePlayListStore()
 
 const toDetail = (index: number) => {
+    setSongList.getCurIndex(index)
     router.push('/playdetail')
     for (let k in setSongList.albumSongs) {
         if (setSongList.albumSongs[k].songId === newSongs[index].songId) return
     }
     setSongList.albumSongs.push(newSongs[index])
+
 }
 
 
 const addplaylist = () => {
     setSongList.albumSongs = newSongs
     router.push('/playdetail')
-
+    setSongList.getCurIndex('0')
 }
 
 onMounted(async () => {

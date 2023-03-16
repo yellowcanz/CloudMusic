@@ -7,11 +7,12 @@ export const usePlayListStore =  defineStore('playlist',{
         return {
             songList:[] as any,
             albumSongs:[] as any,
+            changeSong:{} as any,
             allSongID: '',
             songName:'',
             songPic:'',
             singerName:'',
-            changeSong:{} as any
+            curIndex:'0'
         }
     },
 
@@ -26,6 +27,10 @@ export const usePlayListStore =  defineStore('playlist',{
 
         changeSongStore(data:number){
             this.changeSong = data
+        },
+
+        getCurIndex(index:any){
+            this.curIndex = index
         }
     },
 
