@@ -76,7 +76,7 @@
             :src="getSongList.albumSongs.songurl"></audio> -->
 
             <audio ref="audio" @play="onplay" @pause="onpause" @timeupdate="getCurr" @canplay="getTotal"
-            :src="songInfo.songurl"></audio>
+            :src="songInfo.songurl" autoplay></audio>
     </div>
 </template>
 
@@ -148,7 +148,7 @@ onMounted(async () => {
 
     getSongList.albumSongs = mergedArray
     getSongInfo(getSongList.curSongListIndex)
-    audiohandle(true)
+    audiohandle(false)
 })
 
 // 播放
@@ -156,14 +156,13 @@ const onplay = () => {
     if (audio.value.src == '') {
         audio.value.src = songInfo.songurl
     }
-    console.log(audio.value);
     audio.value.play();
     isplay.value = false
 }
 // 暂停
 const onpause = () => {
     audio.value.pause();
-    isplay.value = false
+    isplay.value = true
 }
 
 const audiohandle = (type: any) => {
