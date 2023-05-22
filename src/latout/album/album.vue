@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive } from "vue"
+import { onMounted, reactive,ref } from "vue"
 import { CaretRight } from "@element-plus/icons-vue";
 import { useRoute, useRouter } from 'vue-router'
 import { singinglist } from '../../api/api'
@@ -38,32 +38,36 @@ import { usePlayListStore } from '../../store/songlist'
 import { stringify } from "querystring";
 
 let album = reactive<Album[any]>([])
-let newSongs: any = []
+let songDetailList: any = []
+let curSongListIndex = 0
 
 const router = useRouter()
-const singingListId: any = useRoute().query.id
-const setSongList = usePlayListStore()
+const singingListId: any = useRoute().query.id //接收路由id
 
+const setSongList = usePlayListStore()  //pinia
+//这里点击歌曲列表不追加单曲，把歌单的所有歌曲覆盖
 const toDetail = (index: number) => {
-    setSongList.getCurIndex(index)
-    router.push('/playdetail')
-    for (let k in setSongList.albumSongs) {
-        if (setSongList.albumSongs[k].songId === newSongs[index].songId) return
-    }
-    setSongList.albumSongs.push(newSongs[index])
+    addplaylist()
+    curSongListIndex = index
+    setSongList.curSongListIndex = curSongListIndex 
 
+    // for (let k in setSongList.albumSongs) {
+    //     if (setSongList.albumSongs[k].songId === songDetailList[index].songId) return
+    // }
+    // setSongList.albumSongs.push(songDetailList[index])
 }
 
 
+//播放 选择所有歌单的歌曲播放
 const addplaylist = () => {
-    setSongList.albumSongs = newSongs
+    curSongListIndex = 0
+    setSongList.curSongListIndex = curSongListIndex
+    setSongList.albumSongs = songDetailList
     router.push('/playdetail')
-    setSongList.getCurIndex('0')
 }
 
 onMounted(async () => {
     const rec: any = await singinglist(singingListId) //获取专辑信息
-
     album.songs = rec.songs //专辑歌曲列表
     album.picurl = rec.album.picUrl //专辑图片
     album.description = rec.album.description //专辑简介
@@ -74,7 +78,10 @@ onMounted(async () => {
     album.singername = rec.album.artist.name  //歌手名字
     album.dt = rec.album.publishTime //专辑发布时间
 
-    newSongs = album.songs.map((item: any, index: any) => {
+    setSongList.songPic =  album.picurl
+
+    //只保留一些目前需要用到的歌曲信息
+    songDetailList = album.songs.map((item: any, index: any) => {
         let obj = {
             songId: item.id,
             songName: item.name,
